@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BasicAuth.api.data;
 
-public class UserDbContext : DbContext {
-    UserDbContext(DbContextOptions<UserDbContext> options) : base(options) {}
-
+public class UserDbContext(DbContextOptions<UserDbContext> options) : DbContext(options) {
     public DbSet<User> Users => Set<User>();
 }
