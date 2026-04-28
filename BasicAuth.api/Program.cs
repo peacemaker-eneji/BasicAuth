@@ -43,4 +43,18 @@ app.MapPost("/signup", (CreateUserDto userDto) => {
 });
 
 
+app.MapPost("/login", (LoginDto loginDto) => {
+    User? user;
+    using (var scope = app.Services.CreateScope()) {
+        var dbContext = scope.ServiceProvider.GetRequiredService<UserDbContext>();
+        
+        user = dbContext.Users.FirstOrDefault(x=>x.Email==loginDto.Email);
+        if (user is null) return Results.BadRequest("User not found");
+
+        var result = hasher.VerifyHashedPassword(user, user.PasswordHash, loginDto.Password);
+        if (result==PasswordVerificationResult.Failed) return Results.BadRequest("Incorrect Password");
+    }
+    return Results.Ok(new UserInfoDto(user.Firstname, user.Lastname, user.Email));
+});
+
 app.Run();
