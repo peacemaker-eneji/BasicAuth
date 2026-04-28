@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace BasicAuth.api.data
+namespace BasicAuth.api.data.migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

@@ -7,5 +7,5 @@ public record CreateUserDto(
     [Required] string Firstname, 
     [Required] string Lastname,
     [Required] string Email,
-    [Required] string password
+    [Required] string Password
 );

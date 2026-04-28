@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BasicAuth.api.data
+namespace BasicAuth.api.data.migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20260428140446_InitialCreate")]
+    [Migration("20260428143429_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

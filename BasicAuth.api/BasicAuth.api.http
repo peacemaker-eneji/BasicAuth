@@ -1,0 +1,10 @@
+###
+POST http://localhost:5192/signup
+Content-Type: application/json
+
+{
+    "Email": "enr@sadas.asdf",
+    "Lastname": "Ohieku",
+    "FIrstname": "Eneji",
+    "Password": "1234"
+}
