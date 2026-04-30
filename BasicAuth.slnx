@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="BasicAuth.api/BasicAuth.api.csproj" />
+  <Project Path="BasicAuth.Commands/BasicAuth.Commands.csproj" Id="637c7323-238c-4712-9860-9e27f849fb6e" />
+  <Project Path="BasicAuth.Data/BasicAuth.Data.csproj" Id="bfafe090-1988-404f-b855-dab32671fb83" />
+  <Project Path="BasicAuth.Queries/BasicAuth.Queries.csproj" Id="8055303f-643d-4a6a-aa52-d0d7533f16e8" />
+  <Project Path="BasicAuth.Web/BasicAuth.Web.csproj" Id="b797451f-41a0-44aa-958a-98de8bbd127e" />
 </Solution>
