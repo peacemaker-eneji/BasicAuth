@@ -1,10 +1,19 @@
-using BasicAuth.api.data;
-using BasicAuth.api.dtos.login;
-using BasicAuth.api.dtos.signup;
-using BasicAuth.api.models;
+
+using BasicAuth.Commands.Auth;
+using BasicAuth.Data;
+using DotNetEnv;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
+
+Env.Load();
+
+
+string host_url = "localhost:7140";
 
 
 
@@ -14,13 +23,34 @@ builder.Services.AddValidation();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSqlite<AppDbContext>("Data Source=Users.db");
+builder.Services.AddSqlite<AppDbContext>(Environment.GetEnvironmentVariable("DbConnection")!);
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+    options.TokenValidationParameters = new TokenValidationParameters {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "lpcalhost",
+        ValidAudience = "user",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET_KEY")!)) // @peacemaker-eneji TODO
+    };
+});
+builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(AuthController).Assembly));
+builder.Services.AddCors(options => options.AddPolicy("AllowSpecificOrigin", policy =>
+            policy.WithOrigins("https://localhost:7140")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()));
 
 
 
-// APP Confing
+//// APP Confing
 var app = builder.Build();
+app.UseCors("AllowSpecificOrigin");
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -30,44 +60,5 @@ using (var scope = app.Services.CreateScope()) { // Migrate DB
     dbContext.Database.Migrate();
 }
 
-
-
-
-var hasher = new PasswordHasher<User>();
-
-app.MapPost("/signup", (CreateUserDto userDto) => {
-    using (var scope = app.Services.CreateScope()) {
-        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        
-        bool exists = dbContext.Users.Any(x=>x.Email==userDto.Email);
-        if (exists) return Results.BadRequest("Email already exists");
-
-        User user = new User{
-            Firstname = userDto.Firstname,
-            Lastname = userDto.Lastname,
-            Email = userDto.Email
-        };
-
-        user.PasswordHash = hasher.HashPassword(user, userDto.Password);
-        dbContext.Add(user);
-        dbContext.SaveChanges();
-    }
-    return Results.Ok(new UserInfoDto(userDto.Firstname, userDto.Lastname, userDto.Email));
-});
-
-
-app.MapPost("/login", (LoginDto loginDto) => {
-    User? user;
-    using (var scope = app.Services.CreateScope()) {
-        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        
-        user = dbContext.Users.FirstOrDefault(x=>x.Email==loginDto.Email);
-        if (user is null) return Results.BadRequest("User not found");
-
-        var result = hasher.VerifyHashedPassword(user, user.PasswordHash, loginDto.Password);
-        if (result==PasswordVerificationResult.Failed) return Results.BadRequest("Incorrect Password");
-    }
-    return Results.Ok(new UserInfoDto(user.Firstname, user.Lastname, user.Email));
-});
 
 app.Run();

@@ -1,5 +1,5 @@
 ###
-POST http://localhost:5192/signup
+POST http://localhost:5192/auth/signup
 Content-Type: application/json
 
 {

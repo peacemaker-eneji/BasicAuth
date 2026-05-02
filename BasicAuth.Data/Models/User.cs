@@ -1,6 +1,6 @@
 using System;
 
-namespace BasicAuth.api.models;
+namespace BasicAuth.Data.Models;
 
 public class User {
     public int Id {get; set;}
