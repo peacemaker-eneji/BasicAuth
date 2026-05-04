@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BasicAuth.Commands.Users.DeleteUser {
-    internal class DeleteUserRequest {
-    }
+    public record DeleteUserRequest(int Id) : IRequest<Unit>;
 }

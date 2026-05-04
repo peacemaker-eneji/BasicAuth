@@ -4,6 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BasicAuth.Queries.Users.GetUsers {
-    public record GetUsersRequest() : IRequest<List<User>>;
+namespace BasicAuth.Queries.Users.GetUser {
+    public record GetUserIdRequest(string Email) : IRequest<int?>;
 }

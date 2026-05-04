@@ -1,6 +1,8 @@
 
 using BasicAuth.Commands.Auth;
+using BasicAuth.Commands.Auth.Login;
 using BasicAuth.Data;
+using BasicAuth.Queries.Users.GetUser;
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -14,6 +16,10 @@ Env.Load();
 
 
 string host_url = "localhost:7140";
+var handlerAssemblies = new[] {
+    typeof(LoginRequest).Assembly,
+    typeof(GetUserRequest).Assembly
+};
 
 
 
@@ -31,12 +37,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = "lpcalhost",
+        ValidIssuer = "localhost",
         ValidAudience = "user",
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET_KEY")!)) // @peacemaker-eneji TODO
     };
 });
-builder.Services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(AuthController).Assembly));
+builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblies(handlerAssemblies));
 builder.Services.AddCors(options => options.AddPolicy("AllowSpecificOrigin", policy =>
             policy.WithOrigins("https://localhost:7140")
                   .AllowAnyHeader()
