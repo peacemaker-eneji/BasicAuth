@@ -1,5 +1,3 @@
-using System;
-
 namespace BasicAuth.Data.Models;
 
 public class User {

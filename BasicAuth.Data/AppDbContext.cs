@@ -1,4 +1,3 @@
-using System;
 using BasicAuth.Data.Models;
 using Microsoft.EntityFrameworkCore;
 

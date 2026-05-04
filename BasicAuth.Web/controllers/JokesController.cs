@@ -1,9 +1,5 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Query;
-using Newtonsoft.Json.Linq;
-using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
 
 

@@ -3,10 +3,6 @@ using BasicAuth.Commands.Auth.Login.Dtos;
 using BasicAuth.Commands.Auth.Signup;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
 
 namespace BasicAuth.Commands.Auth {
 

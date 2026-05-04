@@ -1,12 +1,8 @@
-
-using BasicAuth.Commands.Auth;
 using BasicAuth.Commands.Auth.Login;
 using BasicAuth.Data;
 using BasicAuth.Queries.Users.GetUser;
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;

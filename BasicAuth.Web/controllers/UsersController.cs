@@ -6,7 +6,6 @@ using BasicAuth.Queries.Users.GetUser;
 using BasicAuth.Queries.Users.GetUsers;
 using BasicAuth.Web.Dtos;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BasicAuth.Web.Controllers {
@@ -27,10 +26,8 @@ namespace BasicAuth.Web.Controllers {
             return users.Select(e => new UserInfoDto(e.Id, e.Firstname, e.Lastname, e.Email)).ToList();
         }
 
-        [HttpGet("{email}")] // get user details with email
-        public async Task<ActionResult<UserInfoDto>> GetUser(string email) {
-            int? id = await _mediator.Send(new GetUserIdRequest(email));
-            if (id is null) return NotFound();
+        [HttpGet("{id}")] // get user details with email
+        public async Task<ActionResult<UserInfoDto>> GetUser(int id) {
             User? user = await _mediator.Send(new GetUserRequest((int)id));
             if (user is null) return NotFound();
             return Ok(new UserInfoDto(user.Id, user.Firstname, user.Lastname, user.Email));
@@ -42,10 +39,9 @@ namespace BasicAuth.Web.Controllers {
             return BadRequest("Email already exists");
         }
 
-        [HttpDelete("{email}")] // Delete User
-        public async Task<ActionResult> DeleteUser(string email) {
-            var id = await _mediator.Send(new GetUserIdRequest(email));
-            if (id is not null) await _mediator.Send(new DeleteUserRequest((int)id));
+        [HttpDelete("{id}")] // Delete User
+        public async Task<ActionResult> DeleteUser(int id) {
+            await _mediator.Send(new DeleteUserRequest(id));
             return Ok();
         }
 
